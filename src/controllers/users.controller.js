@@ -1,10 +1,7 @@
-exports.getAllUsers = (request, response) => {
-    const data = [
-        {
-            name: "Bob",
-            phone: "08562723423"
-        }
-    ]
+const userModel = require("../models/users.model")
+
+exports.getAllUsers = async(request, response) => {
+    const data = await userModel.findAll()
     return response.json({
         success: true,
         message: "List of all users",
@@ -12,23 +9,44 @@ exports.getAllUsers = (request, response) => {
     })
 }
 
-exports.createUser = (request, response) => {
-    return response.json({
-        success: true,
-        message: `Create user ${request.body.fullname} successfully`
+exports.getOneUser = async(request, response) => {
+    const data = await userModel.findOne(request.params.id)
+    if(data){
+        return response.json({
+            success: true,
+            message: "Detail User",
+            results: data
+        })
+    }
+    return response.status(404).json({
+        success: false,
+        message: "Error user not found",
     })
 }
 
-exports.updateUser = (request, response) => {
+exports.createUser = async (request, response) => {
+    const data = await userModel.insert(request.body)
     return response.json({
         success: true,
-        message: `Update user ${request.params.id} successfully`
+        message: `Create user ${request.body.email} successfully`,
+        results : data
     })
 }
 
-exports.deleteUser = (request, response) => {
+exports.updateUser = async (request, response) => {
+    const data = await userModel.update(request.params.id, request.body)
     return response.json({
         success: true,
-        message: `Delete user ${request.params.id} successfully`
+        message: "Update user successfully",
+        results: data
+    })
+}
+
+exports.deleteUser = async (request, response) => {
+    const data = await userModel.destroy(request.params.id)
+    return response.json({
+        success: true,
+        message: "Delete user successfully",
+        results : data
     })
 }
