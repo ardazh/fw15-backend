@@ -1,4 +1,5 @@
 const userModel = require("../models/users.model")
+const erorrHandler = require("../helpers/errorHandler.helper")
 
 exports.getAllUsers = async(request, response) => {
     const data = await userModel.findAll()
@@ -18,19 +19,20 @@ exports.getOneUser = async(request, response) => {
             results: data
         })
     }
-    return response.status(404).json({
-        success: false,
-        message: "Error user not found",
-    })
+    return erorrHandler(response, data)
 }
 
 exports.createUser = async (request, response) => {
-    const data = await userModel.insert(request.body)
-    return response.json({
-        success: true,
-        message: `Create user ${request.body.email} successfully`,
-        results : data
-    })
+    try{
+        const data = await userModel.insert(request.body)
+        return response.json({
+            success: true,
+            message: `Create user ${request.body.email} successfully`,
+            results : data
+        })
+    }catch(err){
+        return erorrHandler(response, err)    
+    }
 }
 
 exports.updateUser = async (request, response) => {
