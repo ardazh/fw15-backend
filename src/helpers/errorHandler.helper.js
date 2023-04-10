@@ -11,6 +11,18 @@ const erorrHandler = (response, err) => {
             message: "Error user not found",
         })
     }
+    if(err?.message?.includes("empty_field")){
+        return response.json({
+            success: false,
+            message: "Email or Password cannot be empty"
+        })
+    }
+    if(err?.message?.includes("email_format")){
+        return response.json({
+            success: false,
+            message: "Wrong email format, use @"
+        })
+    }
     return response.status(500).json({
         success: false,
         message: "Error: internal server error"

@@ -24,6 +24,12 @@ exports.getOneUser = async(request, response) => {
 
 exports.createUser = async (request, response) => {
     try{
+        if(request.body.email == "" && request.body.password == ""){
+            throw Error("empty_field")
+        }
+        if(!request.body.email.includes("@")){
+            throw Error("email_format")
+        }
         const data = await userModel.insert(request.body)
         return response.json({
             success: true,
@@ -34,6 +40,18 @@ exports.createUser = async (request, response) => {
         return erorrHandler(response, err)    
     }
 }
+
+// exports.createUser = (request, response) => {
+//     userModel.insert(request.body).then(data => {
+//         return response.json({
+//             success: true,
+//             message: "Create user success",
+//             results: data
+//         })
+//     }).catch(err => {
+//         return erorrHandler(response, err)
+//     })
+// }
 
 exports.updateUser = async (request, response) => {
     const data = await userModel.update(request.params.id, request.body)
