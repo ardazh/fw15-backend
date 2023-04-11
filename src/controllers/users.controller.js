@@ -24,6 +24,9 @@ exports.getOneUser = async(request, response) => {
 
 exports.createUser = async (request, response) => {
     try{
+        if(!request.body.fullName){
+            throw Error("name_empty_field")
+        }
         if(request.body.email == "" || request.body.password == ""){
             throw Error("empty_field")
         }

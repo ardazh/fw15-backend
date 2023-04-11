@@ -18,10 +18,10 @@ exports.findOne = async function(id){
 
 exports.insert = async function(data){
     const query = `
-    INSERT INTO "users" ("email", "password")
-    VALUES ($1, $2) RETURNING *
+    INSERT INTO "users" ("fullName","email", "password")
+    VALUES ($1, $2, $3) RETURNING *
     `
-    const values = [data.email, data.password]
+    const values = [data.fullName, data.email, data.password]
     const {rows} = await db.query(query, values)
     return rows[0]
 }

@@ -11,6 +11,12 @@ const erorrHandler = (response, err) => {
             message: "Error user not found",
         })
     }
+    if(err?.message?.includes("name_empty_field")){
+        return response.json({
+            success: false,
+            message: "Name cannot be empty"
+        })
+    }
     if(err?.message?.includes("empty_field")){
         return response.json({
             success: false,
@@ -23,6 +29,7 @@ const erorrHandler = (response, err) => {
             message: "Wrong email format, use @"
         })
     }
+    console.log(err)
     return response.status(500).json({
         success: false,
         message: "Error: internal server error"
