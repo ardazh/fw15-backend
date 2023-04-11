@@ -24,7 +24,7 @@ exports.getOneUser = async(request, response) => {
 
 exports.createUser = async (request, response) => {
     try{
-        if(request.body.email == "" && request.body.password == ""){
+        if(request.body.email == "" || request.body.password == ""){
             throw Error("empty_field")
         }
         if(!request.body.email.includes("@")){
@@ -54,19 +54,39 @@ exports.createUser = async (request, response) => {
 // }
 
 exports.updateUser = async (request, response) => {
-    const data = await userModel.update(request.params.id, request.body)
-    return response.json({
-        success: true,
-        message: "Update user successfully",
-        results: data
-    })
+    try{
+        const data = await userModel.update(request.params.id, request.body)
+        if(!data){
+            return erorrHandler(response, undefined)
+        }
+        if(request.body.email == "" || request.body.password == ""){
+            throw Error("empty_field")
+        }
+        if(!request.body.email.includes("@")){
+            throw Error("email_format")
+        }
+        return response.json({
+            success: true,
+            message: "Update user successfully",
+            results: data
+        })
+    }catch(err){
+        return erorrHandler(response, err)
+    } 
 }
 
 exports.deleteUser = async (request, response) => {
-    const data = await userModel.destroy(request.params.id)
-    return response.json({
-        success: true,
-        message: "Delete user successfully",
-        results : data
-    })
+    try{
+        const data = await userModel.destroy(request.params.id)
+        if(!data){
+            return erorrHandler(response, undefined)
+        }
+        return response.json({
+            success: true,
+            message: "Delete user successfully",
+            results : data
+        })
+    }catch(err){
+        return erorrHandler(response, err)
+    }
 }
