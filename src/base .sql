@@ -27,3 +27,6 @@ VALUES
 ('Riko Simanjuntak', 'riko@mail.com', '123321'),
 ('Cahya Supriadi', 'cahya@mail.com', '123321'),
 ('Tri Pamungkas', 'tri@mail.com', '123321');
+
+
+SELECT * FROM "users" LIMIT 5 OFFSET 10;

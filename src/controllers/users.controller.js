@@ -2,7 +2,8 @@ const userModel = require("../models/users.model")
 const erorrHandler = require("../helpers/errorHandler.helper")
 
 exports.getAllUsers = async(request, response) => {
-    const data = await userModel.findAll()
+
+    const data = await userModel.findAll(request.query.page, request.query.limit)
     return response.json({
         success: true,
         message: "List of all users",
