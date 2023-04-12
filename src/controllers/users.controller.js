@@ -3,12 +3,21 @@ const erorrHandler = require("../helpers/errorHandler.helper")
 
 exports.getAllUsers = async(request, response) => {
 
-    const data = await userModel.findAll(request.query.page, request.query.limit)
-    return response.json({
-        success: true,
-        message: "List of all users",
-        results: data
-    })
+    try{
+        const data = await userModel.findAll(
+            request.query.page, 
+            request.query.limit, 
+            request.query.search,
+            request.query.sort, request.query.sortBy)
+        
+        return response.json({
+            success: true,
+            message: "List of all users",
+            results: data
+        })
+    }catch(err){
+        return erorrHandler(response, err)
+    }
 }
 
 exports.getOneUser = async(request, response) => {
