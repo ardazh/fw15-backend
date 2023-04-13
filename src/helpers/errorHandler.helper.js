@@ -5,6 +5,18 @@ const erorrHandler = (response, err) => {
             message: "Error: email already used"
         })
     }
+    if(err?.message?.includes("jwt malformed")){
+        return response.status(401).json({
+            success: false,
+            message: "Token is invalid!"
+        })
+    }
+    if(err?.message?.includes("invalid signature")){
+        return response.status(401).json({
+            success: false,
+            message: "Token signature is invalid!"
+        })
+    }
     if(err === undefined){
         return response.status(404).json({
             success: false,
@@ -33,6 +45,12 @@ const erorrHandler = (response, err) => {
         return response.status(401).json({
             success: false,
             message: "Wrong Email or Password"
+        })
+    }
+    if(err?.message?.includes("unauthorized")){
+        return response.status(401).json({
+            success: false,
+            message: "Unauthorized"
         })
     }
 
