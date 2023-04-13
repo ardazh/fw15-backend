@@ -29,6 +29,13 @@ const erorrHandler = (response, err) => {
             message: "Wrong email format, use @"
         })
     }
+    if(err?.message?.includes("wrong_credentials")){
+        return response.status(401).json({
+            success: false,
+            message: "Wrong Email or Password"
+        })
+    }
+
     console.log(err)
     return response.status(500).json({
         success: false,
