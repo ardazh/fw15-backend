@@ -3,7 +3,6 @@ const erorrHandler = require("../helpers/errorHandler.helper")
 const argon = require("argon2")
 
 exports.getAllUsers = async(request, response) => {
-
     try{
         const data = await userModel.findAll(
             request.query.page, 

@@ -1,4 +1,10 @@
 const erorrHandler = (response, err) => {
+    // if(err?.message === "validation"){
+    //   return response.status(400).json({
+    //     success: false,
+    //     message: ""
+    // })
+    // }
     if(err?.message?.includes("duplicate key")){
         return response.status(409).json({
             success: false,
