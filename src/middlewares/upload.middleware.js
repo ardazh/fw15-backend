@@ -12,8 +12,25 @@ const storage = multer.diskStorage({
     }
 })
 
-const upload = multer({storage})
+const limits = {
+    fileSize: 1 * 1024 * 1024
+}
 
-const uploadMiddleware =(field) => upload.single(field)
+const upload = multer({storage, limits})
+
+const uploadMiddleware =(field) => {
+    const uploadField = upload.single(field)
+    return (request, response, next ) => {
+        uploadField(request, response, (err) => {
+            if(err){
+                return response.status(400).json({
+                    success: false,
+                    message: "File too large"
+                })
+            }
+            return next()
+        })
+    }
+}
 
 module .exports = uploadMiddleware
