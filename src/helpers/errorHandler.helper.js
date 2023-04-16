@@ -47,6 +47,12 @@ const erorrHandler = (response, err) => {
             message: "Wrong Email or Password"
         })
     }
+    if(err?.message?.includes("password unmatch")){
+        return response.status(400).json({
+            success: false,
+            message: "Password and Confirm Password does not match"
+        })
+    }
     if(err?.message?.includes("unauthorized")){
         return response.status(401).json({
             success: false,

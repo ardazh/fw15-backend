@@ -10,7 +10,10 @@ exports.findAll = async function(page, limit, search, sort, sortBy){
     const offset = (page - 1) * limit
 
     const query = `
-    SELECT * FROM "users" WHERE "email" LIKE $3 ORDER BY "${sort}" ${sortBy} LIMIT $1 OFFSET $2
+    SELECT * FROM "users" 
+    WHERE "email" LIKE $3 
+    ORDER BY "${sort}" ${sortBy} 
+    LIMIT $1 OFFSET $2
     `
     const values = [limit, offset, `%${search}%`]
 
