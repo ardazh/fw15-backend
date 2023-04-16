@@ -34,20 +34,22 @@ exports.getOneUser = async(request, response) => {
 
 exports.createUser = async (request, response) => {
     try{
-        if(!request.body.fullName){
-            throw Error("name_empty_field")
-        }
-        if(request.body.email == "" || request.body.password == ""){
-            throw Error("empty_field")
-        }
-        if(!request.body.email.includes("@")){
-            throw Error("email_format")
-        }
+        // if(!request.body.fullName){
+        //     throw Error("name_empty_field")
+        // }
+        // if(request.body.email == "" || request.body.password == ""){
+        //     throw Error("empty_field")
+        // }
+        // if(!request.body.email.includes("@")){
+        //     throw Error("email_format")
+        // }
         const hash = await argon.hash(request.body.password)
         const data = {
             ...request.body,
             password: hash
         }
+        if(request.file)
+            data.picture = request.file.filename
         const user = await userModel.insert(data)
         return response.json({
             success: true,
