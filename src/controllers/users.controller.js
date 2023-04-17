@@ -48,8 +48,8 @@ exports.createUser = async (request, response) => {
             ...request.body,
             password: hash
         }
-        if(request.file)
-            data.picture = request.file.filename
+        // if(request.file)
+        //     data.picture = request.file.filename
         const user = await userModel.insert(data)
         return response.json({
             success: true,

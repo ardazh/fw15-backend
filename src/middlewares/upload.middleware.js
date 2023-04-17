@@ -25,7 +25,7 @@ const fileFilter = (req, file, cb) => {
 
 const upload= multer({storage, limits, fileFilter})
 
-const uploadMiddleware =(field) => {
+const uploadMiddleware = (field) => {
     const uploadField = upload.single(field)
     return (request, response, next) => {
         uploadField(request, response, (err) => {
