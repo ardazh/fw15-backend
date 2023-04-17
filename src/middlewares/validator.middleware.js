@@ -11,7 +11,6 @@ const rules = {
         body("password").isLength({min: 1}).withMessage("Password is Invalid")
     ],
     createUser: [
-        body("fullName").isLength({min: 3, max: 80}).withMessage("Name legth is invalid"),
         formatEmail,
         strongPassword
     ],

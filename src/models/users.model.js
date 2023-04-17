@@ -1,4 +1,5 @@
 const db = require("../helpers/db.helper")
+const table = "users"
 
 exports.findAll = async function(page, limit, search, sort, sortBy){
     page = parseInt(page) || 1
@@ -10,7 +11,7 @@ exports.findAll = async function(page, limit, search, sort, sortBy){
     const offset = (page - 1) * limit
 
     const query = `
-    SELECT * FROM "users" 
+    SELECT * FROM "${table}" 
     WHERE "email" LIKE $3 
     ORDER BY "${sort}" ${sortBy} 
     LIMIT $1 OFFSET $2
@@ -23,7 +24,7 @@ exports.findAll = async function(page, limit, search, sort, sortBy){
 
 exports.findOne = async function(id){
     const query = `
-    SELECT * FROM "users" WHERE id=$1
+    SELECT * FROM "${table}" WHERE id=$1
     `
     const values = [id]
     const {rows} = await db.query(query, values)
@@ -32,7 +33,7 @@ exports.findOne = async function(id){
 
 exports.findOneByEmail = async function(email){
     const query = `
-  SELECT * FROM "users" WHERE email=$1
+  SELECT * FROM "${table}" WHERE email=$1
   `
     const values = [email]
     const {rows} = await db.query(query, values)
@@ -41,29 +42,30 @@ exports.findOneByEmail = async function(email){
 
 exports.insert = async function(data){
     const query = `
-    INSERT INTO "users" ("fullName","email", "password", "picture")
-    VALUES ($1, $2, $3, $4) RETURNING *
+    INSERT INTO "${table}" ("email", "password")
+    VALUES ($1, $2) RETURNING *
     `
-    const values = [data.fullName, data.email, data.password, data.picture]
+    const values = [data.email, data.password]
     const {rows} = await db.query(query, values)
     return rows[0]
 }
 
 exports.update = async function(id, data){
     const query = `
-      UPDATE "users" 
-      SET "email"=$2, "password"=$3, "picture"=$4, "fullName"=$5 
+      UPDATE "${table}" SET
+      "email"=COALESCE(NULLIF($2,''), "email"),
+      "password"=COALESCE(NULLIF($3,''), "password") 
       WHERE "id"=$1
       RETURNING *
     `
-    const values = [id, data.email, data.password, data.picture, data.fullName]
+    const values = [id, data.email, data.password]
     const {rows} = await db.query(query, values)
     return rows[0]
 }
 
 exports.destroy = async function(id){
     const query = `
-      DELETE FROM "users" WHERE "id"=$1 RETURNING *
+      DELETE FROM "${table}" WHERE "id"=$1 RETURNING *
     `
     const values = [id]
     const {rows} = await db.query(query, values)
