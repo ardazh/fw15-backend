@@ -19,7 +19,7 @@ const rules = {
     ],
     idParams: [
         param("id").isNumeric().withMessage("ID is invalid"). 
-            isInt({min: 1}).withMessage("ID have to be more than 0")
+            isInt({min: 1}).withMessage("ID can't be empty")
     ]
 }
 
