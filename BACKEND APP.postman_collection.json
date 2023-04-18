@@ -433,12 +433,12 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "rio@mail.com",
+									"value": "indrasjafri@mail.com",
 									"type": "default"
 								},
 								{
 									"key": "password",
-									"value": "123321",
+									"value": "B@ng1234",
 									"type": "default"
 								}
 							]
@@ -465,8 +465,13 @@
 							"mode": "urlencoded",
 							"urlencoded": [
 								{
+									"key": "fullName",
+									"value": "indra",
+									"type": "default"
+								},
+								{
 									"key": "email",
-									"value": "young@mail.com",
+									"value": "indrasjafri@mail.com",
 									"type": "default"
 								},
 								{
@@ -489,6 +494,77 @@
 							"path": [
 								"auth",
 								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FORGOT PASSWORD",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "indrasjafri@mail.com",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/auth/forgotPassword",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"forgotPassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RESET PASSWORD",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "code",
+									"value": "227440",
+									"type": "default"
+								},
+								{
+									"key": "email",
+									"value": "indrasjafri@mail.com",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "12341234",
+									"type": "default"
+								},
+								{
+									"key": "confirmPassword",
+									"value": "12341234",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/auth/resetPassword",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"resetPassword"
 							]
 						}
 					},

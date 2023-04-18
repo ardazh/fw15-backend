@@ -20,6 +20,11 @@ const rules = {
     idParams: [
         param("id").isNumeric().withMessage("ID is invalid"). 
             isInt({min: 1}).withMessage("ID can't be empty")
+    ],
+    resetPassword: [
+        body("confirmPassword").custom((value, {req}) => {
+            return value === req.body.password
+        }).withMessage("Confirm password does not match")
     ]
 }
 
