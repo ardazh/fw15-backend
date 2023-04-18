@@ -25,17 +25,19 @@
 										{
 											"key": "email",
 											"value": "rose@mail.com",
-											"type": "text"
+											"type": "text",
+											"disabled": true
 										},
 										{
 											"key": "password",
 											"value": "1234",
-											"type": "text"
+											"type": "text",
+											"disabled": true
 										}
 									]
 								},
 								"url": {
-									"raw": "{{url}}/admin/users?page=2&limit=2",
+									"raw": "{{url}}/admin/users?page=1&limit=5&sortBy=ASc",
 									"host": [
 										"{{url}}"
 									],
@@ -46,11 +48,25 @@
 									"query": [
 										{
 											"key": "page",
-											"value": "2"
+											"value": "1"
 										},
 										{
 											"key": "limit",
-											"value": "2"
+											"value": "5"
+										},
+										{
+											"key": "search",
+											"value": "as",
+											"disabled": true
+										},
+										{
+											"key": "sortBy",
+											"value": "ASc"
+										},
+										{
+											"key": "sort",
+											"value": "id",
+											"disabled": true
 										}
 									]
 								}
@@ -91,18 +107,13 @@
 									"mode": "urlencoded",
 									"urlencoded": [
 										{
-											"key": "fullName",
-											"value": "Hansamu Yama",
-											"type": "default"
-										},
-										{
 											"key": "email",
-											"value": "yama@mail.com",
+											"value": "shin@mail.com",
 											"type": "default"
 										},
 										{
 											"key": "password",
-											"value": "123321",
+											"value": "B@ng1234",
 											"type": "default"
 										}
 									]
@@ -129,18 +140,13 @@
 									"mode": "urlencoded",
 									"urlencoded": [
 										{
-											"key": "name",
-											"value": "",
-											"type": "default"
-										},
-										{
 											"key": "email",
-											"value": "admin@mail.com",
+											"value": "kim@mail.com",
 											"type": "default"
 										},
 										{
 											"key": "password",
-											"value": "123321",
+											"value": "B@ng1234",
 											"type": "default"
 										}
 									]
@@ -183,7 +189,7 @@
 									"variable": [
 										{
 											"key": "id",
-											"value": "3"
+											"value": "1"
 										}
 									]
 								}
@@ -191,6 +197,302 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "PROFILES",
+					"item": [
+						{
+							"name": "GET ALL PROFILES",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "{{url}}/admin/profiles",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"profiles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET DETAIL USER",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/admin/profile/:id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"profile",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "3"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CREATE PROFILE",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "userId",
+											"value": "1",
+											"type": "default"
+										},
+										{
+											"key": "picture",
+											"type": "file",
+											"src": "/C:/Users/KAKA DEDE/Downloads/profile1.jpg"
+										},
+										{
+											"key": "fullName",
+											"value": "Kim Jisoo",
+											"type": "default"
+										},
+										{
+											"key": "phoneNumber",
+											"value": "0812345678910",
+											"type": "default"
+										},
+										{
+											"key": "gender",
+											"value": "1",
+											"type": "default"
+										},
+										{
+											"key": "profession",
+											"value": "Actress",
+											"type": "default"
+										},
+										{
+											"key": "nationality",
+											"value": "South Korea",
+											"type": "default"
+										},
+										{
+											"key": "birthDate",
+											"value": "1995-03-01",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/profiles",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"profiles"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": "as",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UPDATE PROFILE",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "userId",
+											"value": "1",
+											"type": "default"
+										},
+										{
+											"key": "picture",
+											"type": "file",
+											"src": "/C:/Users/KAKA DEDE/Downloads/profile1.jpg"
+										},
+										{
+											"key": "fullName",
+											"value": "Jisoo Kim",
+											"type": "default"
+										},
+										{
+											"key": "phoneNumber",
+											"value": "0812345678910",
+											"type": "default"
+										},
+										{
+											"key": "gender",
+											"value": "1",
+											"type": "default"
+										},
+										{
+											"key": "profession",
+											"value": "Singer",
+											"type": "default"
+										},
+										{
+											"key": "nationality",
+											"value": "South Korea",
+											"type": "default"
+										},
+										{
+											"key": "birthDate",
+											"value": "1995-01-03",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/profiles/:id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"profiles",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE PROFILE",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/admin/profiles/:id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"profiles",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "AUTH",
+			"item": [
+				{
+					"name": "LOGIN",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "rio@mail.com",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "123321",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "REGISTER",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "young@mail.com",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "B@ng1234",
+									"type": "default"
+								},
+								{
+									"key": "confirmPassword",
+									"value": "B@ng1234",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/auth/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -209,6 +511,16 @@
 			"response": []
 		}
 	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",
