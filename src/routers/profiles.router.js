@@ -6,7 +6,8 @@ const uploadMiddleware = require("../middlewares/upload.middleware")
 
 const profileController = require("../controllers/profiles.controller") 
  
-profileRouter.post(
+profileRouter.get("/", profileController.getProfile)
+profileRouter.patch(
     "/", 
     uploadMiddleware("picture"), 
     profileController.updateProfile
