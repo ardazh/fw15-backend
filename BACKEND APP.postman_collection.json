@@ -433,7 +433,7 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "indrasjafri@mail.com",
+									"value": "indra@mail.com",
 									"type": "default"
 								},
 								{
@@ -466,12 +466,12 @@
 							"urlencoded": [
 								{
 									"key": "fullName",
-									"value": "indra",
+									"value": "indra ss",
 									"type": "default"
 								},
 								{
 									"key": "email",
-									"value": "indrasjafri@mail.com",
+									"value": "indra@mail.com",
 									"type": "default"
 								},
 								{
@@ -547,12 +547,12 @@
 								},
 								{
 									"key": "password",
-									"value": "12341234",
+									"value": "B@ng1234",
 									"type": "default"
 								},
 								{
 									"key": "confirmPassword",
-									"value": "12341234",
+									"value": "B@ng1234",
 									"type": "default"
 								}
 							]
@@ -565,6 +565,145 @@
 							"path": [
 								"auth",
 								"resetPassword"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PROFILE",
+			"item": [
+				{
+					"name": "EDIT PROFILE",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "fullName",
+									"value": "Indra Sjafri",
+									"type": "default"
+								},
+								{
+									"key": "picture",
+									"type": "file",
+									"src": "/C:/Users/KAKA DEDE/Downloads/download.jpg",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/profile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET PROFILE",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/profile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CITY",
+			"item": [
+				{
+					"name": "CITY",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/city",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"city"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ALL CITY",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/city/allCity",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"city",
+								"allCity"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CATEGORY",
+			"item": [
+				{
+					"name": "ALL CATEGORY",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/category",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"category"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PARTNERS",
+			"item": [
+				{
+					"name": "ALL PARTNERS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/category",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"category"
 							]
 						}
 					},
