@@ -14,6 +14,7 @@ router.use("/profile", authMiddleware, require("./profiles.router"))
 router.use("/city", authMiddleware, require("./city.router"))
 router.use("/category", authMiddleware, require("./category.router"))
 router.use("/partners", authMiddleware, require("./partners.router"))
+router.use("/changePassword", require("./changePassword.router"))
 
 router.use("*", (request, response) =>{
     return response.status(404).json({
