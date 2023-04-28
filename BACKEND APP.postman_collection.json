@@ -438,7 +438,7 @@
 								},
 								{
 									"key": "password",
-									"value": "B@ng1234",
+									"value": "B@ng12345",
 									"type": "default"
 								}
 							]
@@ -698,12 +698,54 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/category",
+							"raw": "{{url}}/partners",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"category"
+								"partners"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CHANGE PASSWORD",
+			"item": [
+				{
+					"name": "CHANGE PASSWORD",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "oldPassword",
+									"value": "B@ng1234",
+									"type": "default"
+								},
+								{
+									"key": "newPassword",
+									"value": "B@ng12345",
+									"type": "default"
+								},
+								{
+									"key": "confirmPassword",
+									"value": "B@ng12345",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/changePassword",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"changePassword"
 							]
 						}
 					},
