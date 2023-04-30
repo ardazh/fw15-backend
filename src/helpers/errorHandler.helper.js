@@ -29,6 +29,12 @@ const erorrHandler = (response, err) => {
             message: "Error user not found",
         })
     }
+    if(err?.message?.includes("event_not_found")){
+        return response.status(404).json({
+            success: false,
+            message: "Events Not Found"
+        })
+    }
     if(err?.message?.includes("name_empty_field")){
         return response.json({
             success: false,

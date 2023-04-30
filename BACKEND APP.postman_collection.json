@@ -433,12 +433,12 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "indra@mail.com",
+									"value": "shin@mail.com",
 									"type": "default"
 								},
 								{
 									"key": "password",
-									"value": "B@ng12345",
+									"value": "B@ng1234",
 									"type": "default"
 								}
 							]
@@ -660,6 +660,55 @@
 							"path": [
 								"city",
 								"allCity"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "WISHLISTS",
+			"item": [
+				{
+					"name": "WISHLISTS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/wishlists",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"wishlists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE WISHLISTS",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "eventId",
+									"value": "7",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/wishlists",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"wishlists"
 							]
 						}
 					},

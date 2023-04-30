@@ -35,3 +35,5 @@ INSERT INTO "eventCategories" ("eventId", "categoryId") VALUES
 (5, 5),
 (6, 5),
 (7, 5);
+
+
