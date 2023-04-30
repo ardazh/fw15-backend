@@ -668,6 +668,28 @@
 			]
 		},
 		{
+			"name": "EVENTS",
+			"item": [
+				{
+					"name": "EVENTS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/events",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"events"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "WISHLISTS",
 			"item": [
 				{

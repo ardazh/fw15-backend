@@ -16,6 +16,7 @@ router.use("/category", authMiddleware, require("./category.router"))
 router.use("/partners", authMiddleware, require("./partners.router"))
 router.use("/changePassword", require("./changePassword.router"))
 router.use("/wishlists", authMiddleware, require("./wishlists.router"))
+router.use("/events", authMiddleware, require("./events.router"))
 
 router.use("*", (request, response) =>{
     return response.status(404).json({
