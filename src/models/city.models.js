@@ -35,3 +35,13 @@ exports.findCity = async function(sort, sortBy){
     const {rows} = await db.query(query)
     return rows
 }
+
+exports.findOne = async function(id){
+    const query =`
+  SELECT * FROM  "${table}"
+  WHERE id=$1`
+
+    const values = [id]
+    const {rows} = await db.query(query, values)
+    return rows[0]
+}

@@ -1,71 +1,103 @@
 const db = require("../helpers/db.helper")
 const table = "events"
 
-exports.findAll = async function(page, limit, search, sort, sortBy){
+exports.findAll = async function(searchName, searchCategory, searchLocation,page, limit, sort, sortBy){
     page = parseInt(page) || 1
     limit = parseInt(limit) || 5
-    search = search || ""
+    searchName = searchName || ""
+    searchCategory = searchCategory || ""
+    searchLocation = searchLocation || ""
     sort = sort || "id"
     sortBy = sortBy || "ASC"
 
     const offset = (page - 1) * limit
-
+  
     const query = `
-    SELECT * FROM "${table}" 
-    WHERE "email" LIKE $3 
-    ORDER BY "${sort}" ${sortBy} 
+    SELECT 
+    "e"."id", 
+    "e"."picture", 
+    "e"."title", 
+    "e"."date", 
+    "c"."name" as "category",
+    "ci"."name" as "location" 
+    FROM "eventCategories" "ec"
+    JOIN "events" "e" ON "e"."id" = "ec"."eventId"
+    JOIN "categories" "c" ON "c"."id" = "ec"."categoryId"
+    JOIN "cities" "ci" ON "ci"."id" = "e"."cityId"
+    WHERE "e"."title" LIKE $3 AND "c"."name" LIKE $4 AND "ci"."name" LIKE $5
+    ORDER BY "${sort}" ${sortBy}
     LIMIT $1 OFFSET $2
     `
-    const values = [limit, offset, `%${search}%`]
-
+    const values = [limit, offset, `%${searchName}%`, `%${searchCategory}%`, `%${searchLocation}%`]
     const {rows} = await db.query(query, values)
     return rows
 }
 
-exports.findOne = async function(id){
+exports.findOneById = async function(id){
     const query = `
-    SELECT * FROM "${table}" WHERE id=$1
-    `
+    SELECT
+    "e"."id", 
+    "e"."picture", 
+    "e"."title", 
+    "e"."date", 
+    "c"."name" as "category",
+    "ci"."name" as "location" 
+    FROM "eventCategories" "ec"
+    JOIN "events" "e" ON "e"."id" = "ec"."eventId"
+    JOIN "categories" "c" ON "c"."id" = "ec"."categoryId"
+    JOIN "cities" "ci" ON "ci"."id" = "e"."cityId"
+    WHERE "e"."id" = $1
+  `
     const values = [id]
     const {rows} = await db.query(query, values)
-    return rows[0]
-}
-exports.findOneById = async function(){
-    const query = `
-  SELECT * FROM "${table}"
-  `
-    const {rows} = await db.query(query)
     return rows
 }
 
-exports.findOneByEmail = async function(email){
+//manage event
+exports.findDetailManageEvents = async function(eventId, createdBy){
     const query = `
-  SELECT * FROM "${table}" WHERE email=$1
+  SELECT * FROM "${table}" WHERE "id" = $1 AND "createdBy" = $2
   `
-    const values = [email]
+    const values = [eventId, createdBy]
     const {rows} = await db.query(query, values)
     return rows[0]
 }
 
-exports.insert = async function(data){
+exports.findAllManageEvents = async function(createdBy){
     const query = `
-    INSERT INTO "${table}" ("email", "password")
-    VALUES ($1, $2) RETURNING *
+  SELECT * FROM "${table}" 
+  WHERE "createdBy" = $1
+  `
+    const values = [createdBy]
+    const {rows} = await db.query(query, values)
+    return rows
+}
+
+exports.createManageEvents = async function(data){
+    const query = `
+    INSERT INTO "${table}"
+    ("picture", "title", "date", "cityId", "descriptions", "createdBy")
+    VALUES ($1, $2, $3, $4, $5, $6) RETURNING *
     `
-    const values = [data.email, data.password]
+    const values = [data.picture, data.title, data.date,
+        data.cityId, data.descriptions, data.createdBy]
     const {rows} = await db.query(query, values)
     return rows[0]
 }
 
-exports.update = async function(id, data){
+exports.updateManageEvents = async function(id, data){
     const query = `
-      UPDATE "${table}" SET
-      "email"=COALESCE(NULLIF($2,''), "email"),
-      "password"=COALESCE(NULLIF($3,''), "password") 
-      WHERE "id"=$1
-      RETURNING *
-    `
-    const values = [id, data.email, data.password]
+  UPDATE "${table}" SET
+  "picture" = COALESCE(NULLIF($2, ''), "picture"),
+  "title" = COALESCE(NULLIF($3, ''), "title"),    
+  "date" = COALESCE(NULLIF($4::DATE, NULL), "date"),    
+  "cityId" = COALESCE(NULLIF($5::INTEGER, NULL), "cityId"), 
+  "descriptions" = COALESCE(NULLIF($6, ''), "descriptions")
+     WHERE "id" = $1 
+  RETURNING *
+  `
+    const values = [id, data.picture, data.title, data.date,
+        data.cityId, data.descriptions]
     const {rows} = await db.query(query, values)
     return rows[0]
 }
