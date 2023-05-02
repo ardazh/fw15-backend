@@ -58,7 +58,7 @@ exports.getManageAllEvent = async(request, response) => {
 
 exports.getManageDetailEvent = async(request, response) => {
     try{ 
-        const {id} = request.use
+        const {id} = request.user
         const data = await eventsModel.findDetailManageEvents(request.params.id, id)
         return response.json({
             success: true,
@@ -126,6 +126,23 @@ exports.updateManageEvent =async (request, response) =>{
         throw Error ("update_event_failed")
     }catch(err){
         fileremover(request.file)
+        return erorrHandler(response, err)
+    }
+}
+
+exports.deleteManageEvent = async (request, response) => {
+    try{
+        const {id} = request.user
+        const data = await eventsModel.destroyByIdAndUserId(request.params.id, id)
+        if(!data){
+            return erorrHandler(response, undefined)
+        }
+        return response.json({
+            success: true,
+            message: "Delete Events successfully",
+            results : data
+        })
+    }catch(err){
         return erorrHandler(response, err)
     }
 }

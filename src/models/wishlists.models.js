@@ -28,4 +28,12 @@ exports.insert = async function(data){
     return rows[0]
 }
 
+exports.destroyByIdAndUserId = async function(id, userId){
+    const query = `
+DELETE FROM "${table}" WHERE "id"=$1 AND "userId" = $2 RETURNING *
+`
+    const values = [id, userId]
+    const {rows} = await db.query(query, values)
+    return rows[0]
+}
 
