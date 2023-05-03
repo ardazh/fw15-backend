@@ -71,6 +71,18 @@ const erorrHandler = (response, err) => {
             message: "Password and Confirm Password does not match"
         })
     }
+    if(err?.message?.includes("no_user")){
+        return response.status(400).json({
+            success: false,
+            message: "Email Not Found!"
+        })
+    }
+    if(err?.message?.includes("no_forgot_request")){
+        return response.status(400).json({
+            success: false,
+            message: "Email Not Found!"
+        })
+    }
     if(err?.message?.includes("unauthorized")){
         return response.status(401).json({
             success: false,

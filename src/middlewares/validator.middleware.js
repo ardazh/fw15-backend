@@ -14,6 +14,9 @@ const rules = {
         formatEmail,
         strongPassword
     ],
+    forgotPassword: [
+        formatEmail
+    ],
     getAllUsers: [
         query("sortBy").toUpperCase().isIn(["ASC", "DESC"]).withMessage("Sort type is invalid")
     ],
@@ -22,6 +25,8 @@ const rules = {
             isInt({min: 1}).withMessage("ID can't be empty")
     ],
     resetPassword: [
+        formatEmail,
+        strongPassword,
         body("confirmPassword").custom((value, {req}) => {
             return value === req.body.password
         }).withMessage("Confirm password does not match")
