@@ -18,6 +18,8 @@ router.use("/changePassword", require("./changePassword.router"))
 router.use("/wishlists", authMiddleware, require("./wishlists.router"))
 router.use("/events", authMiddleware, require("./events.router"))
 router.use("/reservations", authMiddleware, require("./reservations.router"))
+router.use("/payment", authMiddleware, require("./payment.router"))
+router.use("/history", authMiddleware, require("./history.router"))
 
 router.use("*", (request, response) =>{
     return response.status(404).json({
