@@ -30,5 +30,5 @@ exports.createPayment = async (request, response) => {
     }catch(err){
         return erorrHandler(response, err)    
     }
-}
+} 
 

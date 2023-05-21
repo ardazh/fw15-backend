@@ -89,7 +89,18 @@ const erorrHandler = (response, err) => {
             message: "Unauthorized"
         })
     }
-
+    if(err?.message?.includes("invalid token")){
+        return response.status(401).json({
+            success: false,
+            message: "Unauthorized: Token Expired, please relogin"
+        })
+    }
+    if(err?.message?.includes("jwt expired")){
+        return response.status(401).json({
+            success: false,
+            message: "Unauthorized: Token Expired, please relogin"
+        })
+    }
     console.log(err)
     return response.status(500).json({
         success: false,

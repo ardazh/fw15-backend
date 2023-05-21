@@ -1,7 +1,7 @@
 const db = require("../helpers/db.helper")
 const table = "profiles"
 
-exports.findAll = async function(page, limit, search, sort, sortBy){
+exports.findAll = async function (page, limit, search, sort, sortBy) {
     page = parseInt(page) || 1
     limit = parseInt(limit) || 5
     search = search || ""
@@ -18,24 +18,25 @@ exports.findAll = async function(page, limit, search, sort, sortBy){
     `
     const values = [limit, offset, `%${search}%`]
 
-    const {rows} = await db.query(query, values)
+    const { rows } = await db.query(query, values)
     return rows
 }
 
-exports.findOne = async function(id){
+exports.findOne = async function (id) {
     const query = `
     SELECT * FROM "${table}" WHERE id=$1
     `
     const values = [id]
-    const {rows} = await db.query(query, values)
+    const { rows } = await db.query(query, values)
     return rows[0]
 }
 
-exports.findOneByUserId = async function(userId){
+exports.findOneByUserId = async function (userId) {
     const query = `
   SELECT
   "u"."id",
   "p"."fullName",
+  "p"."picture",
   "u"."email",
   "p"."phoneNumber",
   "p"."gender",
@@ -49,20 +50,20 @@ exports.findOneByUserId = async function(userId){
   WHERE "p"."userId"=$1
   `
     const values = [userId]
-    const {rows} = await db.query(query, values)
+    const { rows } = await db.query(query, values)
     return rows[0]
 }
 
-exports.findOneByEmail = async function(email){
+exports.findOneByEmail = async function (email) {
     const query = `
   SELECT * FROM "${table}" WHERE email=$1
   `
     const values = [email]
-    const {rows} = await db.query(query, values)
+    const { rows } = await db.query(query, values)
     return rows[0]
 }
 
-exports.insert = async function(data){
+exports.insert = async function (data) {
     const query = `
     INSERT INTO "${table}" (
       "userId", "picture", "fullName", 
@@ -73,15 +74,15 @@ exports.insert = async function(data){
     RETURNING *
     `
     const values = [
-        data.userId, data.picture, data.fullName, 
-        data.phoneNumber, data.gender, data.profession, 
+        data.userId, data.picture, data.fullName,
+        data.phoneNumber, data.gender, data.profession,
         data.nationality, data.birthDate
     ]
-    const {rows} = await db.query(query, values)
+    const { rows } = await db.query(query, values)
     return rows[0]
 }
 
-exports.update = async function(id, data){
+exports.update = async function (id, data) {
     const query = `
       UPDATE "${table}" SET
       "userId"=COALESCE(NULLIF($2::INTEGER, NULL), "userId"),
@@ -96,15 +97,15 @@ exports.update = async function(id, data){
       RETURNING *
     `
     const values = [
-        id, data.userId, data.picture, 
-        data.fullName, data.phoneNumber, data.gender, 
+        id, data.userId, data.picture,
+        data.fullName, data.phoneNumber, data.gender,
         data.profession, data.nationality, data.birthDate
     ]
-    const {rows} = await db.query(query, values)
+    const { rows } = await db.query(query, values)
     return rows[0]
 }
 
-exports.updateByUserId = async function(userId, data){
+exports.updateByUserId = async function (userId, data) {
     const query = `
     UPDATE "${table}" SET
     "picture"=COALESCE(NULLIF($2,''), "picture"),
@@ -118,19 +119,19 @@ exports.updateByUserId = async function(userId, data){
     RETURNING *
   `
     const values = [
-        userId, data.picture, 
-        data.fullName, data.phoneNumber, data.gender, 
+        userId, data.picture,
+        data.fullName, data.phoneNumber, data.gender,
         data.profession, data.nationality, data.birthDate
     ]
-    const {rows} = await db.query(query, values)
+    const { rows } = await db.query(query, values)
     return rows[0]
 }
 
-exports.destroy = async function(id){
+exports.destroy = async function (id) {
     const query = `
       DELETE FROM "${table}" WHERE "id"=$1 RETURNING *
     `
     const values = [id]
-    const {rows} = await db.query(query, values)
+    const { rows } = await db.query(query, values)
     return rows[0]
 }

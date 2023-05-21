@@ -2,14 +2,12 @@ const categoryModel = require("../models/category.models")
 const erorrHandler = require("../helpers/errorHandler.helper")
 
 
-exports.getCategory = async(request, response) => {
+exports.getAllCategory = async(request, response) => {
     try{
-        const data = await categoryModel.findCategory(
-            request.query.sort, request.query.sortBy)
-        
+        const data = await categoryModel.findAllCategory(request.query)
         return response.json({
             success: true,
-            message: "List of Category",
+            message: "List of All Category",
             results: data
         })
     }catch(err){

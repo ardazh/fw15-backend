@@ -4,7 +4,7 @@ const erorrHandler = require("../helpers/errorHandler.helper")
 
 exports.getCity = async(request, response) => {
     try{
-        const data = await cityModel.findCity(
+        const data = await cityModel.findAll(
             request.query.sort, request.query.sortBy)
         
         return response.json({

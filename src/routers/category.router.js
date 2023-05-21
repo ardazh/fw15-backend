@@ -4,8 +4,8 @@ const categoryRouter = require("express").Router()
 // const authMiddleware = require("../middlewares/auth.middleware")
 
 
-const categoryController = require("../controllers/category.controller") 
- 
-categoryRouter.get("/", categoryController.getCategory)
+const categoryController = require("../controllers/category.controller")
+
+categoryRouter.get("/", categoryController.getAllCategory)
 
 module.exports = categoryRouter

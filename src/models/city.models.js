@@ -1,9 +1,9 @@
 const db = require("../helpers/db.helper")
 const table = "cities"
 
-exports.findAll = async function(page, limit, search, sort, sortBy){
+exports.findAll = async function (page, limit, search, sort, sortBy) {
     page = parseInt(page) || 1
-    limit = parseInt(limit) || 5
+    limit = parseInt(limit) || 7
     search = search || ""
     sort = sort || "id"
     sortBy = sortBy || "ASC"
@@ -18,11 +18,11 @@ exports.findAll = async function(page, limit, search, sort, sortBy){
     `
     const values = [limit, offset, `%${search}%`]
 
-    const {rows} = await db.query(query, values)
+    const { rows } = await db.query(query, values)
     return rows
 }
 
-exports.findCity = async function(sort, sortBy){
+exports.findCity = async function (sort, sortBy) {
     sort = sort || "id"
     sortBy = sortBy || "ASC"
 
@@ -32,16 +32,16 @@ exports.findCity = async function(sort, sortBy){
   LIMIT 7 OFFSET 1
   `
 
-    const {rows} = await db.query(query)
+    const { rows } = await db.query(query)
     return rows
 }
 
-exports.findOne = async function(id){
-    const query =`
+exports.findOne = async function (id) {
+    const query = `
   SELECT * FROM  "${table}"
   WHERE id=$1`
 
     const values = [id]
-    const {rows} = await db.query(query, values)
+    const { rows } = await db.query(query, values)
     return rows[0]
 }
