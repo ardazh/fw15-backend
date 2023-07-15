@@ -85,7 +85,7 @@ exports.createManageEvent = async (request, response) => {
             throw Error("failed_create_events")
         }
         const listToken = await deviceTokenModel.findAll(1,1000)
-        const message = listToken.map(item => ({token: item.token, notification:{title:"there is new event", body:`${request.body.tittle} will be held at ${request.body.date}, check it out!` }}))
+        const message = listToken.map(item => ({token: item.token, notification:{title:"there is new event", body:`${request.body.title} will be held at ${request.body.date}, check it out!` }}))
         const messaging = admin.messaging()
         messaging.sendEach(message)
         return response.json({
