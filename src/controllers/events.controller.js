@@ -2,6 +2,8 @@ const eventsModel = require("../models/events.models")
 const cityModel = require("../models/city.models")
 const fileremover = require("../helpers/fileRemover.helper")
 const erorrHandler = require("../helpers/errorHandler.helper")
+const deviceTokenModel = require("../models/deviceToken.model")
+const admin = require("../helpers/firebase")
 
 
 exports.getAllEvent = async (request, response) => {
@@ -74,7 +76,6 @@ exports.createManageEvent = async (request, response) => {
         if (request.file) {
             data.picture = request.file.filename
         }
-        console.log(data.picture)
         const cityId = await cityModel.findOne(data.cityId)
         if (!cityId) {
             throw Error("city_not_found")
@@ -83,6 +84,10 @@ exports.createManageEvent = async (request, response) => {
         if (!newData) {
             throw Error("failed_create_events")
         }
+        const listToken = await deviceTokenModel.findAll(1,1000)
+        const message = listToken.map(item => ({token: item.token, notification:{title:"there is new event", body:`${request.body.tittle} will be held at ${request.body.date}, check it out!` }}))
+        const messaging = admin.messaging()
+        messaging.sendEach(message)
         return response.json({
             success: true,
             message: "Create Events Successfully!",
