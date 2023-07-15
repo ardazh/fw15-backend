@@ -14,6 +14,18 @@ exports.insertToken = async function (id, data) {
     return rows[0]
 }
 
+exports.findAll = async(page, limit) => {
+    page = parseInt(page) || 1
+    limit = parseInt(limit) || 10
+    const offset = (page - 1) * limit
+    const queries = `
+SELECT * FROM "${table}" LIMIT $1 OFFSET $2
+`
+    const values = [limit, offset]
+    const {rows} = await db.query(queries, values)  
+    return rows
+}
+
 exports.findOneByToken = async(token) => {
     const query = `
 SELECT * FROM "${table}"
