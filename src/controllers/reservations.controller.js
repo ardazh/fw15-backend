@@ -7,6 +7,9 @@ const erorrHandler = require("../helpers/errorHandler.helper")
 exports.createReservations = async (request, response) => {
     try{
         const {id} = request.user
+        if(!id){
+            throw Error("unauthorized")
+        }
         const status = 1
         const paymentMethod = 2
 
@@ -27,9 +30,9 @@ exports.createReservations = async (request, response) => {
 
         const reservationsTickets = await reservationsModel.insert(data)
 
-        const reservations = reservations.id
-        const section = reservationsTickets.sectionId
-        const quantity = reservationsTickets.quantity
+        const reservations = reservationsTickets.id
+        const section = request.body.sectionId
+        const quantity = request.body.quantity
 
         const ticketSection = await reservationSectionsModel.findOne(section)
         const dataTickets = {

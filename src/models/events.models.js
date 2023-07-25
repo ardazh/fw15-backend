@@ -56,7 +56,7 @@ exports.findOneById = async function (id) {
 
 exports.findOne = async(id) => {
     const query = `
-  SELECCT * FROM "${table}"
+  SELECT * FROM "${table}"
   WHERE "id" = $1
   `
 
