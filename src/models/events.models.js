@@ -54,6 +54,17 @@ exports.findOneById = async function (id) {
     return rows[0]
 }
 
+exports.findOne = async(id) => {
+    const query = `
+  SELECCT * FROM "${table}"
+  WHERE "id" = $1
+  `
+
+    const values =[id]
+    const {rows} = await db.query(query, values)
+    return rows[0]
+}
+
 //manage event
 exports.findDetailManageEvents = async function (eventId, createdBy) {
     const query = `

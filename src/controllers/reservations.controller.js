@@ -1,6 +1,7 @@
 const reservationsModel = require("../models/reservations.models")
 const reservationTicketsModel = require("../models/reservationTickets.models")
 const reservationSectionsModel = require("../models/reservationSections.models")
+const eventModel = require("../models/events.models")
 const erorrHandler = require("../helpers/errorHandler.helper")
 
 exports.createReservations = async (request, response) => {
@@ -9,10 +10,7 @@ exports.createReservations = async (request, response) => {
         const status = 1
         const paymentMethod = 2
 
-        const sections = await reservationSectionsModel.findOne(request.body.sectionId)
-        if(!sections){
-            throw Error("sections_not_found")
-        }
+        
         const data = {
             ...request.body,
             userId: id,
@@ -20,33 +18,57 @@ exports.createReservations = async (request, response) => {
             paymentMethodId: paymentMethod
         }
 
-        const reservations = await reservationsModel.insert(data)
-        if(!reservations){
-            throw Error("cannot_create_reservations")
-        }
-        const tickets = {
-            ...request.body,
-            reservationsId: reservations.id
+        if(data.eventId){
+            const event = await eventModel.findOne(data.eventId)
+            if(!event){
+                throw Error("event_not_found")
+            }
         }
 
-        const reservationsTickets = await reservationTicketsModel.insert(tickets)
+        const reservationsTickets = await reservationsModel.insert(data)
+
+        const reservations = reservations.id
         const section = reservationsTickets.sectionId
         const quantity = reservationsTickets.quantity
 
-        const sectionName = await reservationSectionsModel.findOne(section)
-        const seats = sectionName.name
-        const price = sectionName.price
-        const totalPayment = "Rp" + parseInt(price) * parseInt(quantity)
-
-        const reservationsResults = {
-            seats,
-            quantity,
-            totalPayment
+        const ticketSection = await reservationSectionsModel.findOne(section)
+        const dataTickets = {
+            reservations,
+            section,
+            quantity
         }
+
+        await reservationTicketsModel.insert(dataTickets)
+
+        // if(!reservations){
+        //     throw Error("cannot_create_reservations")
+        // }
+        // const tickets = {
+        //     ...request.body,
+        //     reservationsId: reservations.id
+        // }
+
+        // const sectionName = await reservationSectionsModel.findOne(section)
+        // const seats = sectionName.name
+        // const price = sectionName.price
+        // const totalPayment = "Rp" + parseInt(price) * parseInt(quantity)
+
+        // const reservationsResults = {
+        //     seats,
+        //     quantity,
+        //     totalPayment
+        // }
         return response.json({
             success: true,
             message: "Create Reservations successfully",
-            results : reservationsResults
+            results : {
+                id: reservations.id,
+                events: await eventModel.findOneById(request.body.eventId),
+                sectionName: ticketSection.name,
+                quantity: quantity,
+                pricePerTicket: ticketSection.price,
+                totalPrice: parseInt(quantity) * parseInt(ticketSection.price)
+            }
         })
     }catch(err){
         return erorrHandler(response, err)    
