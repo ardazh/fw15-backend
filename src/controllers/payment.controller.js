@@ -9,10 +9,10 @@ exports.createPayment = async (request, response) => {
         if(!id){
             throw Error("id_not_found")
         }
-        const sectionStatus = 3
+        const status = 1
         const data = {
             ...request.body,
-            statusId: sectionStatus
+            statusId: status
         }
         const reservations = await reservationsModels.findOne(data.reservationId)
         if(!reservations){
