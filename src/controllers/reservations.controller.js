@@ -30,14 +30,14 @@ exports.createReservations = async (request, response) => {
 
         const reservationsTickets = await reservationsModel.insert(data)
 
-        const reservations = reservationsTickets.id
-        const section = request.body.sectionId
+        const reservationId = reservationsTickets.id
+        const sectionId = request.body.sectionId
         const quantity = request.body.quantity
 
-        const ticketSection = await reservationSectionsModel.findOne(section)
+        const ticketSection = await reservationSectionsModel.findOne(sectionId)
         const dataTickets = {
-            reservations,
-            section,
+            reservationId,
+            sectionId,
             quantity
         }
 
@@ -65,7 +65,7 @@ exports.createReservations = async (request, response) => {
             success: true,
             message: "Create Reservations successfully",
             results : {
-                id: reservations.id,
+                id: reservationsTickets.id,
                 events: await eventModel.findOneById(request.body.eventId),
                 sectionName: ticketSection.name,
                 quantity: quantity,
