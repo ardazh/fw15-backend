@@ -64,13 +64,15 @@ exports.findDetailHistory = async function(id, userId){
 
 exports.update = async function(id, data){
     const query = `
-  UPDATE "${table}" SET    
-  "statusId" = COALESCE(NULLIF($2::INTEGER, NULL), "statusId"),
-  "paymentMethodId" = COALESCE(NULLIF($3::INTEGER, NULL), "paymentMethodId")
+  UPDATE "${table}" SET
+  "eventId"= COALESCE(NULLIF($2::INTEGER, NULL), "eventId"),
+  "userId"= COALESCE(NULLIF($3::INTEGER, NULL), "userId"),    
+  "statusId" = COALESCE(NULLIF($4::INTEGER, NULL), "statusId"),
+  "paymentMethodId" = COALESCE(NULLIF($5::INTEGER, NULL), "paymentMethodId")
   WHERE "id" = $1 
   RETURNING *
   `
-    const values = [id, data.statusId, data.paymentMethodId]
+    const values = [id, data.eventId, data.userId, data.statusId, data.paymentMethodId]
     const {rows} = await db.query(query, values)
     return rows[0]
 }

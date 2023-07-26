@@ -83,6 +83,12 @@ const erorrHandler = (response, err) => {
             message: "Email Not Found!"
         })
     }
+    if(err?.message?.includes("reservations_not_found!")){
+        return response.status(404).json({
+            success: false,
+            message: "Reservation Not Found!"
+        })
+    }
     if(err?.message?.includes("unauthorized")){
         return response.status(401).json({
             success: false,

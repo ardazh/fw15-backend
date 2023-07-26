@@ -1,6 +1,7 @@
 const paymentModel = require("../models/payment.models")
 const reservationsModels = require("../models/reservations.models")
-const erorrHandler = require("../helpers/errorHandler.helper")
+const reservationTickets = require("../models/reservationTickets.models")
+const errorHandler = require("../helpers/errorHandler.helper")
 
 exports.createPayment = async (request, response) => {
     try{
@@ -8,27 +9,43 @@ exports.createPayment = async (request, response) => {
         if(!id){
             throw Error("id_not_found")
         }
-        const reservationStatus = 1
+        const sectionStatus = 3
         const data = {
             ...request.body,
-            statusId: reservationStatus
+            statusId: sectionStatus
         }
-        const reservations = await reservationsModels.findOne(data.reservationsId)
+        const reservations = await reservationsModels.findOne(data.reservationId)
         if(!reservations){
             throw Error("reservations_not_found!")
         }
-        const payment = await paymentModel.findPaymentMethods(data.paymentMethodId)
-        if(!payment){
-            throw Error("event_not_found")
+        const paymentMethod = await paymentModel.findPaymentMethods(data.paymentMethodId)
+        if(!paymentMethod){
+            throw Error("payment_not_found")
         }
-        const updatePayment = await reservationsModels.update(data.reservationsId, data)
+        const payment = await reservationsModels.update(data.reservationId, data)
+        if(!payment){
+            throw Error("update_payment_failed")
+        }
+        const ticketInfo = await reservationTickets.getTicketInfo(data.reservationId)
+        if(!ticketInfo){
+            throw Error("ticket_info_not_found")
+        }
+        const price = parseInt(ticketInfo.price)
+        const quantity = parseInt(ticketInfo.quantity)
+        const totalPayment = price * quantity
+
+        const updatePayment = {
+            ...ticketInfo,
+            totalPayment
+        }
         return response.json({
             success: true,
-            message: "Create Wishlists successfully",
+            message: "Payment Successfully",
             results : updatePayment
         })
     }catch(err){
-        return erorrHandler(response, err)    
+        return errorHandler(response, err)    
     }
-} 
+}
+
 
