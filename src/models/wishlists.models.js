@@ -18,6 +18,17 @@ exports.findWishlists = async function(id){
     const {rows} = await db.query(query, values)
     return rows
 }
+
+exports.findOneByUserIdAndEventId = async(userId, eventId) => {
+    const query = `
+  SELECT * FROM "${table}"
+  WHERE "userId" = $1 AND "eventId" = $2
+`  
+    const values = [userId, eventId]
+    const {rows} = await db.query(query,values)  
+    return rows[0]
+}
+
 exports.insert = async function(data){
     const query = `
   INSERT INTO "${table}" ("userId", "eventId")
