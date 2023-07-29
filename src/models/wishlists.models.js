@@ -29,6 +29,17 @@ exports.findOneByUserIdAndEventId = async(userId, eventId) => {
     return rows[0]
 }
 
+exports.deleteOneByUserIdAndEventId = async(userId, eventId) => {
+    const query = `
+DELETE FROM "${table}"
+WHERE "userId" = $1 AND "eventId" = $2
+RETURNING *
+`  
+    const values = [userId, eventId]
+    const {rows} = await db.query(query,values)  
+    return rows[0]
+}
+
 exports.insert = async function(data){
     const query = `
   INSERT INTO "${table}" ("userId", "eventId")
@@ -39,12 +50,12 @@ exports.insert = async function(data){
     return rows[0]
 }
 
-exports.destroyByIdAndUserId = async function(id, userId){
-    const query = `
-DELETE FROM "${table}" WHERE "id"=$1 AND "userId" = $2 RETURNING *
-`
-    const values = [id, userId]
-    const {rows} = await db.query(query, values)
-    return rows[0]
-}
+// exports.destroyByIdAndUserId = async function(id, userId){
+//     const query = `
+// DELETE FROM "${table}" WHERE "id"=$1 AND "userId" = $2 RETURNING *
+// `
+//     const values = [id, userId]
+//     const {rows} = await db.query(query, values)
+//     return rows[0]
+// }
 

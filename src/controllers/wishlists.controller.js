@@ -25,15 +25,30 @@ exports.createWishlists = async (request, response) => {
             ...request.body,
             userId: id
         }
-        const event = await eventsModel.findOneById(data.eventId)
+        const {eventId} = request.body
+        const event = await eventsModel.findOne(eventId)
+        // console.log(event)
         if(!event){
             throw Error("event_not_found")
         }
-        const profile = await wishlistsModel.insert(data)
+
+        const duplicate = await wishlistsModel.findOneByUserIdAndEventId(id, eventId)
+        if(duplicate){
+            const deleteWishlists = await wishlistsModel.deleteOneByUserIdAndEventId(id, eventId)
+            return response.json({
+                success: true,
+                message: "remove wishlist success",
+                results: deleteWishlists
+            })
+        }
+        const wishlist = await wishlistsModel.insert(data)
+        if(!wishlist){
+            throw Error("Create_wishlist_failed")
+        }
         return response.json({
             success: true,
             message: "Create Wishlists successfully",
-            results : profile
+            results : wishlist
         })
     }catch(err){
         // fileRemover(request.file)
@@ -48,9 +63,7 @@ exports.checkWishlist = async (request, response) => {
     const event = request.query
     // return console.log(event)
     const eventId = event.eventId
-
-    console.log(request.body)
-
+    // console.log(request.body,"test")
     const checkWislist = await wishlistsModel.findOneByUserIdAndEventId(id, eventId)
     // return console.log(checkWislist)
     if(!checkWislist){
@@ -68,20 +81,20 @@ exports.checkWishlist = async (request, response) => {
 
 }
 
-exports.deleteWishlists = async (request, response) => {
-    try{
-        const {id} = request.user
+// exports.deleteWishlists = async (request, response) => {
+//     try{
+//         const {id} = request.user
 
-        const data = await wishlistsModel.destroyByIdAndUserId(request.params.id, id)
-        if(!data){
-            return erorrHandler(response, undefined)
-        }
-        return response.json({
-            success: true,
-            message: "Delete Events successfully",
-            results : data
-        })
-    }catch(err){
-        return erorrHandler(response, err)
-    }
-}
+//         const data = await wishlistsModel.destroyByIdAndUserId(request.params.id, id)
+//         if(!data){
+//             return erorrHandler(response, undefined)
+//         }
+//         return response.json({
+//             success: true,
+//             message: "Delete Events successfully",
+//             results : data
+//         })
+//     }catch(err){
+//         return erorrHandler(response, err)
+//     }
+// }
