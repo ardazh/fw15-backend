@@ -21,6 +21,7 @@ router.use("/reservations", authMiddleware, require("./reservations.router"))
 router.use("/payment", authMiddleware, require("./payment.router"))
 router.use("/history", authMiddleware, require("./history.router"))
 router.use("/device-token", authMiddleware, require("./deviceToken.router"))
+router.use("/section", authMiddleware, require("./reservationSections.router"))
 
 router.use("*", (request, response) => {
     return response.status(404).json({
