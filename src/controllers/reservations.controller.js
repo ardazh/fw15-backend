@@ -35,6 +35,8 @@ exports.createReservations = async (request, response) => {
         const quantity = request.body.quantity
 
         const ticketSection = await reservationSectionsModel.findOne(sectionId)
+        // console.log(ticketSection) 
+        // return
         const dataTickets = {
             reservationId,
             sectionId,

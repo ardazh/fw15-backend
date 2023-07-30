@@ -10,7 +10,7 @@ exports.findOne = async function(id){
     return rows[0]
 }
 
-exports.finAll = async function(page, limit, search, sort, sortBy){
+exports.findAll = async function(page, limit, search, sort, sortBy){
     page = parseInt(page) || 1
     limit = parseInt(limit) || 5
     search = search || ""
@@ -18,7 +18,7 @@ exports.finAll = async function(page, limit, search, sort, sortBy){
     sortBy = sortBy || "ASC"
     const offset = (page - 1) * limit
     const query = `
-  SELECT FORM "${table}" WHERE "name" LIKE $3 ORDER BY "${sort}" ${sortBy} LIMIT $1 OFFSET $2
+  SELECT * FROM "${table}" WHERE "name" LIKE $3 ORDER BY "${sort}" ${sortBy} LIMIT $1 OFFSET $2
   `
 
     const values = [limit, offset, `%${search}%`]
