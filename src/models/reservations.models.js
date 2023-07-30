@@ -27,7 +27,7 @@ exports.findOne = async function(id){
 }
 
 exports.findHistory = async function(id){
-    const queries = `
+    const query = `
     SELECT
     "e"."title",
     "c"."name",
@@ -38,12 +38,63 @@ exports.findHistory = async function(id){
     WHERE "r"."userId" = $1
     `  
     const values = [id]
+    const {rows} = await db.query(query,values)  
+    return rows
+}
+
+exports.countHistory = async (id) => {
+  
+    const queries = `
+  SELECT
+  COUNT(*) AS "totalData"
+  FROM "${table}" "r"
+  WHERE "r"."userId" = $1
+  `
+    const values = [id]
+    const {rows} = await db.query(queries, values)
+    // console.log(rows)
+    return rows[0]
+}
+
+exports.findHistoryByUserId = async(id, page, limit, sort, sortBy) => {
+    page = parseInt(page) || 1
+    limit = parseInt(limit) || 4
+    sort = sort || "id"
+    sortBy = sortBy || "ASC"
+    const offset = (page - 1) * limit
+    const queries = `
+  SELECT
+  reservations."id", 
+  events.title, 
+  cities."name" AS "location", 
+  events."date",
+  reservations."createdAt" AS "reservationDate",
+  "paymentMethods".name AS "paymentMethod"
+  FROM
+  "${table}"
+  LEFT JOIN
+  events
+  ON 
+    reservations."eventId" = events."id"
+  LEFT JOIN
+  cities
+  ON 
+    events."cityId" = cities."id"
+  LEFT JOIN
+  "paymentMethods"
+  ON 
+    reservations."paymentMethodId" = "paymentMethods"."id"
+  WHERE reservations."userId" = $1
+  ORDER BY "${sort}" ${sortBy} LIMIT $2 OFFSET $3
+  `
+    const values = [id, limit, offset]
     const {rows} = await db.query(queries,values)  
+    // console.log(rows)
     return rows
 }
 
 exports.findDetailHistory = async function(id, userId){
-    const queries = `
+    const query = `
     SELECT
     "e"."title",
     "c"."name",
@@ -58,7 +109,7 @@ exports.findDetailHistory = async function(id, userId){
     WHERE "r"."id" = $1 AND "r"."userId" = $2
     `  
     const values = [id, userId]
-    const {rows} = await db.query(queries,values)  
+    const {rows} = await db.query(query,values)  
     return rows[0]
 }
 
