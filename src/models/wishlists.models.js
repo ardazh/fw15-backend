@@ -8,7 +8,8 @@ exports.findWishlists = async function(id){
     "w"."id",
     "e"."title",
     "e"."date",
-    "c"."name" AS "location"
+    "c"."name" AS "location",
+    "e"."id" AS "eventId"
     FROM "${table}" "w"
     JOIN "events" "e" ON "e"."id" = "w"."eventId"
     JOIN "cities" "c" ON "c"."id" = "e"."cityId"

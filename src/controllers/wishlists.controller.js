@@ -26,8 +26,9 @@ exports.createWishlists = async (request, response) => {
             userId: id
         }
         const {eventId} = request.body
+
         const event = await eventsModel.findOne(eventId)
-        // console.log(event)
+        console.log(event)
         if(!event){
             throw Error("event_not_found")
         }
