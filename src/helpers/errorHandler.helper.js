@@ -89,6 +89,18 @@ const erorrHandler = (response, err) => {
             message: "Reservation Not Found!"
         })
     }
+    if(err?.message?.includes("user_not_found")){
+        return response.status(404).json({
+            success: false,
+            message: "ID or User not found"
+        })
+    }
+    if(err?.message?.includes("change_password_failed")){
+        return response.status(404).json({
+            success: false,
+            message: "Change Password Failed"
+        })
+    }
     if(err?.message?.includes("unauthorized")){
         return response.status(401).json({
             success: false,

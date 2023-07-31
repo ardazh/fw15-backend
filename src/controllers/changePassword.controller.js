@@ -2,21 +2,30 @@ const userModel = require("../models/users.model")
 const errorHandler = require("../helpers/errorHandler.helper")
 const argon = require("argon2")
 
-const changePassword = async (request, response) => {
+exports.changePassword = async (request, response) => {
     try{
         const {id} = request.user
-        const {oldPassword, newPassword, confirmPassword} = request.body
         const user = await userModel.findOne(id)
-        const verify = await argon.verify(user.password, oldPassword)
-        if(!verify){
-            throw Error("wrong_password")
+        const {oldPassword: password, newPassword} = request.body
+
+        if(!user){
+            throw Error("user_not_found")
         }
-        if(newPassword !== confirmPassword){
+        
+        const verify = await argon.verify(user.password, password)
+        if(!verify){
             throw Error("password_unmatch")
         }
-        await userModel.update(id, {
-            password: await argon.hash(newPassword)
-        })
+
+        const hash = await argon.hash(newPassword)
+        const data = {
+            password: hash
+        }
+        
+        const changePass = await userModel.update(id, data)
+        if(!changePass){
+            throw Error("change_password_failed")
+        }
         return response.json({
             success: true,
             message: "Password Updated!"
@@ -25,5 +34,3 @@ const changePassword = async (request, response) => {
         errorHandler(response, err)
     }
 }
-
-module.exports = changePassword
