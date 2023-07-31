@@ -5,10 +5,10 @@ exports.findWishlists = async function(id){
 
     const query = `
     SELECT
+    "w"."id",
     "e"."title",
     "e"."date",
-    "c"."name" AS "location",
-    "w"."userId"
+    "c"."name" AS "location"
     FROM "${table}" "w"
     JOIN "events" "e" ON "e"."id" = "w"."eventId"
     JOIN "cities" "c" ON "c"."id" = "e"."cityId"
