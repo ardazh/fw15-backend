@@ -86,6 +86,43 @@ exports.findAllManageEvents = async function (createdBy) {
     return rows
 }
 
+exports.findEventByUserCreated = async(userId, page, limit, sort, sortBy, location, search) => {
+    page = parseInt(page) || 1
+    limit = parseInt(limit) || 5
+    sort = sort || "id"
+    sortBy = sortBy || "ASC"
+    location = location || ""
+    search = search || ""
+    const offset = (page - 1) * limit
+    const query = `
+    SELECT e.*, c.name AS "cityName" FROM "events" e
+    INNER JOIN cities c ON c.id = e."cityId"
+    INNER JOIN users ui ON e."createdBy" = ui.id
+     WHERE ui.id = $4 AND 
+    "title" LIKE $3
+    ${location ? `AND c.name LIKE '%${location}%'` : ""}
+     ORDER BY "${sort}" ${sortBy} LIMIT $1  OFFSET $2
+  `  
+    const values = [limit, offset, `%${search}%`, userId]
+    const {rows} = await db.query(query,values)  
+    return rows
+}
+
+exports.countEvent = async (id) => {
+  
+    const query = `
+SELECT
+COUNT(*) AS "totalData"
+FROM "eventCategories" "ec"
+JOIN "events" "e" ON "e"."id" = "ec"."eventId"
+JOIN "categories" "c" ON "c"."id" = "ec"."categoryId"
+JOIN "cities" "city" ON "city"."id" = "e"."cityId"
+WHERE "e"."createdBy" = $1
+`
+    const values = [id]
+    const {rows} = await db.query(query, values)
+    return rows[0]
+}
 exports.createManageEvents = async function (data) {
     const query = `
     INSERT INTO "${table}"

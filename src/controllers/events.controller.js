@@ -37,12 +37,22 @@ exports.getEvent = async (request, response) => {
 exports.getManageAllEvent = async (request, response) => {
     try {
         const { id } = request.user
-        console.log(id)
-        const data = await eventsModel.findAllManageEvents(id)
+        if(!id){
+            throw Error("unauthorized")
+        }
+        const {page, limit, sort, sortBy} = request.query
+        const data = await eventsModel.findEventByUserCreated(id, page, limit, sort, sortBy)
+        const countEvent = await eventsModel.countEvent(id)
+        const totalPage = Math.ceil(parseInt(countEvent.totalData)/parseInt(limit))
+
+        if(!data){
+            throw Error("data_not_found")
+        }
         return response.json({
             success: true,
-            message: "List of all Manage Events",
-            results: data
+            message: "List Events Create By User",
+            results: data,
+            totalPage: totalPage
         })
     } catch (err) {
         return erorrHandler(response, err)
@@ -70,12 +80,14 @@ exports.createManageEvent = async (request, response) => {
             ...request.body,
             createdBy: id
         }
+        if (request.file) {
+            data.picture = request.file.path
+        }
         const newData = {
             ...data
         }
-        if (request.file) {
-            data.picture = request.file.filename
-        }
+        // return console.log(request.file)
+        
         const cityId = await cityModel.findOne(data.cityId)
         if (!cityId) {
             throw Error("city_not_found")
