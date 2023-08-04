@@ -15,6 +15,6 @@ eventRouter.patch("/manage/:id", uploadMiddleware("picture"), eventController.up
 eventRouter.get("/", eventController.getAllEvent)
 eventRouter.get("/:id", eventController.getEvent)
 
-eventRouter.delete("/manage/:id", authMiddleware.apply, eventController.deleteManageEvent)
+eventRouter.delete("/manage/:id", authMiddleware, eventController.deleteManageEvent)
 
 module.exports = eventRouter
