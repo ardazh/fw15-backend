@@ -1,10 +1,17 @@
 const eventsModel = require("../models/events.models")
 const cityModel = require("../models/city.models")
+const eventCategories = require("../models/eventsCategory.models")
 const fileremover = require("../helpers/fileRemover.helper")
-const erorrHandler = require("../helpers/errorHandler.helper")
+const errorHandler = require("../helpers/errorHandler.helper")
 const deviceTokenModel = require("../models/deviceToken.model")
 const admin = require("../helpers/firebase")
 
+// const cloudinary = require("cloudinary").v4
+// cloudinary.config({
+//     cloud_name: "dxs0yxeyr",
+//     api_key: "236157336681252",
+//     api_secret: "V2uHsegpJtBpFlUl3WSwkxdCL0I"
+// })
 
 exports.getAllEvent = async (request, response) => {
     try {
@@ -15,7 +22,7 @@ exports.getAllEvent = async (request, response) => {
             results: data
         })
     } catch (err) {
-        return erorrHandler(response, err)
+        return errorHandler(response, err)
     }
 }
 
@@ -29,7 +36,7 @@ exports.getEvent = async (request, response) => {
             results: data
         })
     } catch (err) {
-        return erorrHandler(response, err)
+        return errorHandler(response, err)
     }
 }
 
@@ -55,7 +62,7 @@ exports.getManageAllEvent = async (request, response) => {
             totalPage: totalPage
         })
     } catch (err) {
-        return erorrHandler(response, err)
+        return errorHandler(response, err)
     }
 }
 
@@ -63,13 +70,16 @@ exports.getManageDetailEvent = async (request, response) => {
     try {
         const { id } = request.user
         const data = await eventsModel.findDetailManageEvents(request.params.id, id)
+        if(!data){
+            throw Error("data_not_found")
+        }
         return response.json({
             success: true,
-            message: "List of Detail Events",
+            message: "List of Manage Detail Events",
             results: data
         })
     } catch (err) {
-        return erorrHandler(response, err)
+        return errorHandler(response, err)
     }
 }
 
@@ -83,19 +93,24 @@ exports.createManageEvent = async (request, response) => {
         if (request.file) {
             data.picture = request.file.path
         }
-        const newData = {
-            ...data
-        }
-        // return console.log(request.file)
         
         const cityId = await cityModel.findOne(data.cityId)
         if (!cityId) {
             throw Error("city_not_found")
         }
-        const dataEvent = await eventsModel.createManageEvents(newData)
-        if (!newData) {
-            throw Error("failed_create_events")
+        
+        // const dataEvent = await eventsModel.createManageEvents(data)
+        // if (!dataEvent) {
+        //     throw Error("failed_create_events")
+        // }
+
+        const event = await eventsModel.insert(data)
+        const eventCategoriesData = {
+            eventId: event.id,
+            categoryId: data.categoryId
         }
+        await eventCategories.insert(eventCategoriesData)
+
         const listToken = await deviceTokenModel.findAll(1,1000)
         const message = listToken.map(item => ({token: item.token, notification:{title:"there is new event", body:`${request.body.title} will be held at ${request.body.date}, check it out!` }}))
         const messaging = admin.messaging()
@@ -103,11 +118,11 @@ exports.createManageEvent = async (request, response) => {
         return response.json({
             success: true,
             message: "Create Events Successfully!",
-            results: dataEvent
+            results: event
         })
     } catch (err) {
         fileremover(request.file)
-        return erorrHandler(response, err)
+        return errorHandler(response, err)
     }
 }
 
@@ -122,7 +137,9 @@ exports.updateManageEvent = async (request, response) => {
         }
 
         if (request.file) {
-            data.picture = request.file.filename
+            data.picture = request.file.path
+            // data.picture = request.file.filename
+
         }
         const Events = await eventsModel.updateManageEvents(request.params.id, data)
         if (Events) {
@@ -135,23 +152,36 @@ exports.updateManageEvent = async (request, response) => {
         throw Error("update_event_failed")
     } catch (err) {
         fileremover(request.file)
-        return erorrHandler(response, err)
+        return errorHandler(response, err)
     }
 }
 
 exports.deleteManageEvent = async (request, response) => {
     try {
-        const { id } = request.user
-        const data = await eventsModel.destroyByIdAndUserId(request.params.id, id)
-        if (!data) {
-            return erorrHandler(response, undefined)
+        const {id} = request.user
+        if(!id){
+            throw Error("unauthorized")
         }
+        const findUser = await eventsModel.findOne(request.params.id)
+        if(!findUser){
+            throw Error("data_not_found")
+        }
+
+        if(id !== findUser.createdBy){
+            throw Error("data_event_not_created_by_you")
+        }
+
+        const data = await eventsModel.destroy(request.params.id)
+        if(!data){
+            throw Error("data_not_found")
+        }
+        await eventCategories.deleteByEventId(findUser.id)
         return response.json({
             success: true,
-            message: "Delete Events successfully",
-            results: data
+            message: "Delete event successfully",
+            results:data
         })
-    } catch (err) {
-        return erorrHandler(response, err)
+    }catch (err) {
+        return errorHandler(response, err)
     }
 }
