@@ -66,11 +66,48 @@ exports.findOne = async(id) => {
 }
 
 //manage event
-exports.findDetailManageEvents = async function (eventId, createdBy) {
-    const query = `
-  SELECT * FROM "${table}" WHERE "id" = $1 AND "createdBy" = $2
+exports.insert = async(data)=>{
+    const queries = `
+  INSERT INTO "${table}" (
+    "picture",
+    "title",
+    "date",
+    "cityId",
+    "descriptions",
+    "createdBy"
+    )
+  VALUES ($1, $2, $3, $4, $5, $6) RETURNING *
   `
-    const values = [eventId, createdBy]
+    const values = [
+        data.picture,
+        data.title,
+        data.date,
+        data.cityId,
+        data.descriptions,
+        data.createdBy
+    ]
+    const {rows} = await db.query(queries, values)
+    return rows[0]
+}
+
+exports.findDetailManageEvents = async function (id, userId) {
+    const query = `
+    SELECT
+    "e"."id",
+    "e"."picture",
+    "e"."title",
+    "c"."name" AS "location",
+    "e"."date",
+    "e"."descriptions",
+    "cat"."name" AS "eventCategory"
+    FROM "events" "e"
+    JOIN "cities" "c" ON "c"."id" = "e"."cityId"
+    JOIN "eventCategories" "ec" ON "ec"."eventId" = "e"."id"
+    JOIN "categories" "cat" ON "cat"."id" = "ec"."categoryId"
+    WHERE "e"."id" = $1 AND "e"."createdBy" = $2
+  `
+    console.log(query)
+    const values = [id, userId]
     const { rows } = await db.query(query, values)
     return rows[0]
 }
@@ -86,24 +123,25 @@ exports.findAllManageEvents = async function (createdBy) {
     return rows
 }
 
-exports.findEventByUserCreated = async(userId, page, limit, sort, sortBy, location, search) => {
+exports.findEventByUserCreated = async(id, page, limit, sort, sortBy) => {
     page = parseInt(page) || 1
     limit = parseInt(limit) || 5
     sort = sort || "id"
     sortBy = sortBy || "ASC"
-    location = location || ""
-    search = search || ""
     const offset = (page - 1) * limit
     const query = `
-    SELECT e.*, c.name AS "cityName" FROM "events" e
-    INNER JOIN cities c ON c.id = e."cityId"
-    INNER JOIN users ui ON e."createdBy" = ui.id
-     WHERE ui.id = $4 AND 
-    "title" LIKE $3
-    ${location ? `AND c.name LIKE '%${location}%'` : ""}
-     ORDER BY "${sort}" ${sortBy} LIMIT $1  OFFSET $2
+  SELECT
+  "e"."id",
+  "e"."title",
+  "c"."name" AS "location",
+  "e"."date",
+  "e"."descriptions"
+  FROM "events" "e"
+  JOIN "cities" "c" ON "c"."id" = "e"."cityId"
+  WHERE "e"."createdBy" = $1
+  ORDER BY "${sort}" ${sortBy} LIMIT $2 OFFSET $3
   `  
-    const values = [limit, offset, `%${search}%`, userId]
+    const values = [id, limit, offset]
     const {rows} = await db.query(query,values)  
     return rows
 }
