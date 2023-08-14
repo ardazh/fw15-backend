@@ -15,11 +15,13 @@ const admin = require("../helpers/firebase")
 
 exports.getAllEvent = async (request, response) => {
     try {
-        const data = await eventsModel.findAll(request.query)
+        const data = {...request.query}
+        const {rows: results, pageInfo} = await eventsModel.findAllBySearch(data)
         return response.json({
             success: true,
             message: "List of all Events",
-            results: data
+            results,
+            pageInfo,
         })
     } catch (err) {
         return errorHandler(response, err)

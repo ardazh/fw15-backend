@@ -33,6 +33,56 @@ exports.findAll = async function (params) {
     return rows
 }
 
+exports.findAllBySearch = async (params) => {
+    params.page = parseInt(params.page) || 1
+    params.limit = parseInt(params.limit) || 7
+    params.search = params.search || ""
+    params.sort = params.sort || "id"
+    params.sortBy = params.sortBy || "ASC"
+    params.category = params.category || ""
+    params.city = params.city || ""
+
+    const offset = (params.page - 1) * params.limit
+
+    const countQuery = `
+  SELECT COUNT(*)::INTEGER
+  FROM "${table}"
+  WHERE "title" ILIKE $1`
+
+    const countvalues = [`%${params.search}%`]
+    const { rows: countRows } = await db.query(countQuery, countvalues)
+
+    const query = `
+  SELECT
+  "${table}"."id",
+  "${table}"."picture",
+  "${table}"."title",
+  "${table}"."date",
+  "categories"."name" as "category",
+  "cities"."name" as "location"
+  FROM "${table}"
+  JOIN "eventCategories" ON "${table}"."id" = "eventCategories"."eventId"
+  JOIN "categories" ON "categories"."id" = "eventCategories"."categoryId"
+  JOIN "cities" ON "cities"."id" = "${table}"."cityId"
+  WHERE "${table}"."title" ILIKE $3 
+  AND "categories"."name" ILIKE $4
+  AND "cities"."name" ILIKE $5
+  ORDER BY ${params.sort} ${params.sortBy}
+  LIMIT $1 OFFSET $2
+  `
+    const values = [params.limit, offset, `%${params.search}%`, `%${params.category}%`, `%${params.city}%`]
+    const { rows } = await db.query(query, values)
+    return {
+        rows,
+        pageInfo: {
+            totalData: countRows[0].count,
+            page: params.page,
+            limit: params.limit,
+            totalPage: Math.ceil(countRows[0].count / params.limit),
+        },
+    }
+}
+
 exports.findOneById = async function (id) {
     const query = `
     SELECT
